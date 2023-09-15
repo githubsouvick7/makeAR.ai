@@ -1,0 +1,77 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* src/App.css */
+
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.WebcamCapture {
+  max-width: 400px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.WebcamCapture h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.WebcamCapture img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.WebcamCapture button {
+  display: block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.WebcamCapture input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.WebcamCapture p {
+  margin-top: 10px;
+  font-size: 1.2rem;
+}
+
+.WebcamCapture button.delete {
+  background-color: #ff3b3b;
+}
+
+/* Responsive styles for smaller screens */
+@media screen and (max-width: 480px) {
+  .WebcamCapture {
+    max-width: 90%;
+  }
+}
