@@ -11,8 +11,8 @@ const WebcamContainer = styled.div`
   padding: 16px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  width: 300px; /* Set your desired width here */
-  height: 500px; /* Set your desired height here */
+  width: 100%; /* Set your desired width here */
+  height: 100%; /* Set your desired height here */
   margin: 0 auto;
   overflow: hidden; /* Hide video overflow if necessary */
   position: relative; /* Add position relative for absolute positioning */
@@ -21,7 +21,7 @@ const WebcamContainer = styled.div`
 const Video = styled.video`
   width: 100%;
   max-width: 100%;
-  height: calc(70% - 48px); /* 70% of container height minus button and padding */
+  height: calc(90% - 48px); /* 70% of container height minus button and padding */
   border-radius: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 `;
@@ -58,26 +58,49 @@ const DownloadButton = styled.button`
 `;
 
 const CapturedImageContainer = styled.div`
+  position: relative;
   width: 100%;
   max-width: 300px; /* Adjust the width as needed */
   margin: 16px auto;
 `;
 
-const CapturedImage = styled.img`
-  max-width: 100px; /* Adjust the maximum width as needed */
-  max-height: 100px; /* Set the maximum height as needed */
+const CapturedImageWithText = styled.img`
+  width: 80px;
+  max-width: 80px;
   border-radius: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+`;
+
+const ImageTextOverlay = styled.div`
+  position: absolute;
+  bottom: 10px; /* Adjust the position as needed */
+  left: 10px; /* Adjust the position as needed */
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 4px 8px;
+  border-radius: 5px;
 `;
 
 const PlaceholderImage = styled.img`
   cursor: pointer;
 `;
 
+const NameInput = styled.input`
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 10px;
+`;
+
 const WebcamCapture = () => {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const [imageData, setImageData] = useState(null);
+    const [name, setName] = useState('');
+    const [captureDisabled, setCaptureDisabled] = useState(true); // Disable capture initially
 
     useEffect(() => {
         const startWebcam = async () => {
@@ -103,6 +126,11 @@ const WebcamCapture = () => {
         };
     }, []);
 
+    useEffect(() => {
+        // Enable the capture button when the name is not empty
+        setCaptureDisabled(name.trim() === '');
+    }, [name]);
+
     const captureImage = () => {
         if (videoRef.current) {
             const video = videoRef.current;
@@ -121,16 +149,11 @@ const WebcamCapture = () => {
 
     const downloadImage = () => {
         if (imageData) {
-            // Create an anchor element
             const anchor = document.createElement('a');
             anchor.href = imageData;
-            anchor.download = 'captured_image.png'; // You can customize the filename here
+            anchor.download = 'captured_image.png';
             document.body.appendChild(anchor);
-
-            // Trigger a click event on the anchor element
             anchor.click();
-
-            // Remove the anchor element from the DOM
             document.body.removeChild(anchor);
         }
     };
@@ -145,11 +168,14 @@ const WebcamCapture = () => {
     return (
         <WebcamContainer>
             <Video ref={videoRef} autoPlay muted />
-            <CaptureButton onClick={captureImage}>Capture Selfie</CaptureButton>
+            <CaptureButton onClick={captureImage} disabled={captureDisabled}>
+                Capture Selfie
+            </CaptureButton>
             {imageData ? (
                 <>
                     <CapturedImageContainer>
-                        <CapturedImage src={imageData} alt="Captured" onClick={openCamera} />
+                        <CapturedImageWithText src={imageData} alt="Captured" onClick={openCamera} />
+                        <ImageTextOverlay>{name}</ImageTextOverlay>
                     </CapturedImageContainer>
                     <DownloadButton onClick={downloadImage}>Download Image</DownloadButton>
                 </>
@@ -159,6 +185,12 @@ const WebcamCapture = () => {
                         src="placeholder-image.jpg" // Replace with your placeholder image URL
                         alt="Placeholder"
                         onClick={openCamera}
+                    />
+                    <NameInput
+                        type="text"
+                        placeholder="Enter your name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                     />
                 </>
             )}
